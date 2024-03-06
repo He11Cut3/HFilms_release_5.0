@@ -1,0 +1,119 @@
+﻿@model FilmDetails
+<!-- details -->
+<section class="section section--head">
+	<div class="container">
+		<!-- article -->
+		<div class="article">
+			<div class="row">
+				<div class="col-12 col-xl-8">
+					<!-- trailer -->
+					<!-- end trailer -->
+					<!-- article content -->
+					<div class="article__content">
+						<h1>@Model.nameRu</h1>
+
+						<img loading="lazy" src="@Model.posterUrl" style="height: 350px; width: 250px; object-fit: cover;" alt="">
+
+						<ul class="list">
+							<li><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M22,9.67A1,1,0,0,0,21.14,9l-5.69-.83L12.9,3a1,1,0,0,0-1.8,0L8.55,8.16,2.86,9a1,1,0,0,0-.81.68,1,1,0,0,0,.25,1l4.13,4-1,5.68A1,1,0,0,0,6.9,21.44L12,18.77l5.1,2.67a.93.93,0,0,0,.46.12,1,1,0,0,0,.59-.19,1,1,0,0,0,.4-1l-1-5.68,4.13-4A1,1,0,0,0,22,9.67Zm-6.15,4a1,1,0,0,0-.29.88l.72,4.2-3.76-2a1.06,1.06,0,0,0-.94,0l-3.76,2,.72-4.2a1,1,0,0,0-.29-.88l-3-3,4.21-.61a1,1,0,0,0,.76-.55L12,5.7l1.88,3.82a1,1,0,0,0,.76.55l4.21.61Z" /></svg> @Model.ratingKinopoisk</li>
+							<li>@Model.year</li>
+						</ul>
+
+						<p>@Model.description</p>
+						<p></p>
+						<p></p>
+						<p></p>
+					</div>
+					<!-- end article content -->
+				</div>
+				<div class="col-12 col-xl-8">
+					<div class="kinobox_player mx-auto">
+						<script src="https://kinobox.tv/kinobox.min.js"></script>
+						<script style="position: relative; z-index: 1;">
+
+							var savedTime = localStorage.getItem('videoProgress');
+
+							var kinoboxPlayer = new Kinobox('.kinobox_player', {
+								search: {
+									kinopoisk: '@Model?.KinopoiskId'
+								},
+								initialTime: savedTime || 0
+							}).init();
+
+
+							kinoboxPlayer.on('timeupdate', function (currentTime) {
+
+								localStorage.setItem('videoProgress', currentTime);
+							});
+						</script>
+					</div>
+					<div class="article__actions article__actions--details">
+						<button type="button" class="article__favorites" onclick="addToFavorites('@Model.nameRu', '@Model.posterUrl', '@(Model.year ?? null)', '@Model.KinopoiskId' , '@(Model.ratingKinopoisk ?? null)')">
+
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+								<path d="M16,2H8A3,3,0,0,0,5,5V21a1,1,0,0,0,.5.87,1,1,0,0,0,1,0L12,18.69l5.5,3.18A1,1,0,0,0,18,22a1,1,0,0,0,.5-.13A1,1,0,0,0,19,21V5A3,3,0,0,0,16,2Zm1,17.27-4.5-2.6a1,1,0,0,0-1,0L7,19.27V5A1,1,0,0,1,8,4h8a1,1,0,0,1,1,1Z" />
+							</svg>
+							Добавить в избранное
+						</button>
+					</div>
+					<p></p>
+					<p></p>
+					<p></p>
+				</div>
+
+			</div>
+		</div>
+		<!-- end article -->
+	</div>
+</section>
+
+<style>
+	/* Стили для вашего верхнего меню */
+	.top-menu {
+		position: fixed; /* Фиксированное положение */
+		top: 0; /* Разместить вверху страницы */
+		left: 0; /* Разместить в левом углу */
+		width: 100%; /* Занимать всю ширину */
+		background-color: #fff; /* Фон верхнего меню */
+		z-index: 1000; /* Установить высокий z-index */
+	}
+
+	/* Стили для вашего плеера */
+	.kinobox_player {
+		position: relative; /* Относительное положение */
+		z-index: 1; /* Установить z-index меньше, чем у верхнего меню */
+	}
+</style>
+<!-- end details -->
+
+<script>
+	function addToFavorites(title, posterUrl, year, Id, rating) {
+		// Создайте объект FormData для передачи данных на сервер
+		var formData = new FormData();
+		formData.append('title', title);
+		formData.append('posterUrl', posterUrl);
+		formData.append('year', year);
+		formData.append('id', Id);
+		formData.append('rating', rating);
+
+		// Отправьте запрос на сервер, используя Fetch API
+		fetch('/Account/AddToFavorites', {
+			method: 'POST',
+			body: formData,
+			headers: {
+				'X-Requested-With': 'XMLHttpRequest' // Укажите, что это AJAX-запрос
+			}
+		})
+			.then(response => {
+				if (response.ok) {
+					// Обновите интерфейс или предоставьте обратную связь пользователю
+					console.log('Film added to favorites successfully.');
+				} else {
+					console.error('Failed to add film to favorites.');
+				}
+			})
+			.catch(error => {
+				console.error('An error occurred while adding film to favorites.', error);
+			});
+	}
+</script>

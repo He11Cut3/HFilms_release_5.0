@@ -1,0 +1,36 @@
+﻿@model LoginViewModel
+
+<!-- sign in -->
+<div class="sign section--full-bg" data-bg="/img/bg.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="sign__content">
+                    <!-- authorization form -->
+                    <form asp-action="Login" method="post" class="sign__form">
+
+                        <div asp-validation-summary="All" class="text-danger"></div>
+
+                        <a class="sign__logo">
+                            <img src="~/img/logo.png" alt="">
+                        </a>
+
+                        <div class="sign__group">
+                            <input asp-for="UserName" type="text" class="sign__input" placeholder="Логин">
+                        </div>
+
+                        <div class="sign__group">
+                            <input asp-for="Password" type="password" class="sign__input" class="sign__input" placeholder="Пароль">
+                        </div>
+
+                        <button class="sign__btn">Вход</button>
+
+                        <span class="sign__text">Нету аккаунта? <a asp-controller="Account" asp-action="Create">Регистрация</a></span>
+                    </form>
+                    <!-- end authorization form -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end sign in -->
